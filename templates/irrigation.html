@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Irrigation Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>💧 Irrigation Details</h1>
+    <p>Water Usage and Irrigation Information</p>
+
+    <div class="container">
+        {% for item in irrigation %}
+        <div class="card">
+            <h2>{{ item[4] }}</h2>
+            <p>Irrigation ID: {{ item[0] }}</p>
+            <p>Cultivation ID: {{ item[1] }}</p>
+            <p>Date: {{ item[2] }}</p>
+            <p>Water Quantity: {{ item[3] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br><br>
+    <a href="/">Back to Dashboard</a>
+
+</body>
+</html>

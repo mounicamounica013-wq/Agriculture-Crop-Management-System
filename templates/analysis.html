@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yield and Profit Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>📊 Yield and Profit Analysis</h1>
+    <p>Crop-wise Production and Profit Report</p>
+
+    <div class="container">
+        {% for item in analysis %}
+        <div class="card">
+            <h2>{{ item[0] }}</h2>
+            <p>Cultivated Area: {{ item[1] }} Acres</p>
+            <p>Harvested Quantity: {{ item[2] }} kg</p>
+            <p>Yield: {{ (item[2] / item[1]) | round(2) }} kg/acre</p>
+            <p>Selling Price: ₹{{ item[3] }}/kg</p>
+            <p>Revenue: ₹{{ (item[2] * item[3]) | round(2) }}</p>
+            <p>Input Cost: ₹{{ item[4] }}</p>
+            <p>Estimated Profit: ₹{{ (item[2] * item[3] - item[4]) | round(2) }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br><br>
+    <a href="/">Back to Dashboard</a>
+
+</body>
+</html>

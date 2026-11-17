@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Harvest Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>🌾 Harvest Details</h1>
+    <p>Harvested Crop and Quality Information</p>
+
+    <div class="container">
+        {% for item in harvest %}
+        <div class="card">
+            <h2>Harvest ID: {{ item[0] }}</h2>
+            <p>Cultivation ID: {{ item[1] }}</p>
+            <p>Harvest Date: {{ item[2] }}</p>
+            <p>Quantity: {{ item[3] }} kg</p>
+            <p>Quality: {{ item[4] }}</p>
+            <p>Selling Price: ₹{{ item[5] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br><br>
+    <a href="/">Back to Dashboard</a>
+
+</body>
+</html>

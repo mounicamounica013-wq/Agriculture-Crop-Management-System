@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agriculture Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>🌾 Agriculture Crop Management System</h1>
+    <p>Crop Management and Yield Analysis Dashboard</p>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>Total Farmers</h2>
+            <h1>{{ farmers }}</h1>
+        </div>
+
+        <div class="card">
+            <h2>Total Farms</h2>
+            <h1>{{ farms }}</h1>
+        </div>
+
+        <div class="card">
+            <h2>Total Crops</h2>
+            <h1>{{ crops }}</h1>
+        </div>
+
+        <div class="card">
+            <h2>Total Production</h2>
+            <h1>{{ production }} kg</h1>
+        </div>
+
+    </div>
+
+    <br><br>
+    <a href="/crops">View Crop Details</a>
+
+    <br><br>
+    <a href="/farms">View Farm Details</a>
+
+    <br><br>
+    <a href="/farmers">View Farmer Details</a>
+
+    <br><br>
+    <a href="/inputs">View Agricultural Input Details</a>
+
+    <br><br>
+    <a href="/irrigation">View Irrigation Details</a>
+
+    <br><br>
+    <a href="/harvest">View Harvest Details</a>
+
+</body>
+</html>

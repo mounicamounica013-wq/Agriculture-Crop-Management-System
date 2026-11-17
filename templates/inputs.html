@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agricultural Input Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>🌱 Agricultural Input Details</h1>
+    <p>Fertilizer Usage and Cost Information</p>
+
+    <div class="container">
+
+        {% for item in inputs %}
+        <div class="card">
+            <h2>{{ item[1] }}</h2>
+            <p>Input ID: {{ item[0] }}</p>
+            <p>Quantity Used: {{ item[2] }}</p>
+            <p>Input Cost: ₹{{ item[3] }}</p>
+            <p>Application Date: {{ item[4] }}</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <br><br>
+    <a href="/">Back to Dashboard</a>
+
+</body>
+</html>

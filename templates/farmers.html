@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farmer Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>👨‍🌾 Farmer Details</h1>
+    <p>Registered Farmers Information</p>
+
+    <div class="container">
+
+        {% for farmer in farmers %}
+        <div class="card">
+            <h2>{{ farmer[1] }}</h2>
+            <p>Farmer ID: {{ farmer[0] }}</p>
+            <p>Contact: {{ farmer[2] }}</p>
+            <p>Address: {{ farmer[3] }}</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <br><br>
+    <a href="/">Back to Dashboard</a>
+
+</body>
+</html>
