@@ -1,28 +1,211 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Irrigation Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irrigation Management</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .irrigation-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .irrigation-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #216b39;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .irrigation-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .irrigation-search input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .irrigation-card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .edit-btn {
+            background: #2878b8;
+        }
+
+        .delete-btn {
+            background: #c0392b;
+        }
+
+        .irrigation-card-actions form {
+            margin: 0;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>💧 Irrigation Details</h1>
-    <p>Water Usage and Irrigation Information</p>
+<div class="irrigation-page">
 
-    <div class="container">
-        {% for item in irrigation %}
-        <div class="card">
-            <h2>{{ item[4] }}</h2>
-            <p>Irrigation ID: {{ item[0] }}</p>
-            <p>Cultivation ID: {{ item[1] }}</p>
-            <p>Date: {{ item[2] }}</p>
-            <p>Water Quantity: {{ item[3] }}</p>
+    <header class="irrigation-header">
+        <div>
+            <span class="irrigation-label">FARM MANAGEMENT MODULE</span>
+            <h1>💧 Irrigation Management</h1>
+            <p>Water usage and irrigation activity records</p>
         </div>
-        {% endfor %}
+
+        <a href="/" class="irrigation-back">← Dashboard</a>
+    </header>
+
+    {% set ns = namespace(total_water=0) %}
+
+    {% for item in irrigation %}
+        {% set ns.total_water = ns.total_water + (item[3] or 0) %}
+    {% endfor %}
+
+    <section class="irrigation-summary">
+
+        <div class="irrigation-summary-icon">💧</div>
+
+        <div>
+            <p>Total Irrigation Records</p>
+            <h2>{{ irrigation|length }}</h2>
+        </div>
+
+        <div class="irrigation-summary-divider"></div>
+
+        <div>
+            <p>Total Water Usage</p>
+            <h2>{{ ns.total_water }} Units</h2>
+        </div>
+
+    </section>
+
+    <div class="irrigation-section-heading">
+        <h2>Irrigation Records</h2>
+        <p>Details of water usage for each cultivation</p>
     </div>
 
-    <br><br>
-    <a href="/">Back to Dashboard</a>
+    <div class="irrigation-actions">
+        <a href="{{ url_for('add_irrigation') }}" class="irrigation-btn">
+            + Add New Irrigation
+        </a>
+    </div>
+
+    <form method="GET" action="{{ url_for('irrigation') }}"
+          class="irrigation-search">
+
+        <input type="text" name="search"
+               placeholder="Search by cultivation ID or method"
+               value="{{ search or '' }}">
+
+        <button type="submit" class="irrigation-btn">Search</button>
+
+        <a href="{{ url_for('irrigation') }}" class="irrigation-btn">
+            Clear
+        </a>
+    </form>
+
+    <section class="irrigation-grid">
+
+        {% for item in irrigation %}
+
+        <div class="irrigation-card">
+
+            <div class="irrigation-card-top">
+                <div class="irrigation-icon">💦</div>
+                <span class="irrigation-id">Record #{{ item[0] }}</span>
+            </div>
+
+            <h3>{{ item[4]|title }}</h3>
+
+            <div class="irrigation-water-box">
+                <span>Water Quantity</span>
+                <strong>{{ item[3] }} Units</strong>
+            </div>
+
+            <div class="irrigation-details">
+
+                <div class="irrigation-detail">
+                    <span>🌱</span>
+                    <div>
+                        <small>Cultivation ID</small>
+                        <strong>{{ item[1] }}</strong>
+                    </div>
+                </div>
+
+                <div class="irrigation-detail">
+                    <span>📅</span>
+                    <div>
+                        <small>Irrigation Date</small>
+                        <strong>{{ item[2] }}</strong>
+                    </div>
+                </div>
+
+                <div class="irrigation-detail">
+                    <span>🚿</span>
+                    <div>
+                        <small>Irrigation Method</small>
+                        <strong>{{ item[4]|title }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="irrigation-card-actions">
+
+                <a href="{{ url_for('edit_irrigation', irrigation_id=item[0]) }}"
+                   class="irrigation-btn edit-btn">
+                    Edit
+                </a>
+
+                <form method="POST"
+                      action="{{ url_for('delete_irrigation', irrigation_id=item[0]) }}"
+                      onsubmit="return confirm('Are you sure you want to delete this irrigation record?');">
+
+                    <button type="submit" class="irrigation-btn delete-btn">
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="irrigation-empty">
+            <div>💧</div>
+            <h3>No Irrigation Records Found</h3>
+            <p>Irrigation records will appear here after adding data.</p>
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+    <footer class="irrigation-footer">
+        Agriculture Crop Management System · Irrigation Report
+    </footer>
+
+</div>
 
 </body>
 </html>

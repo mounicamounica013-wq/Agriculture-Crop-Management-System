@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Harvest | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="form-container">
+    <h1>🌾 Add Harvest Record</h1>
+    <p>Enter harvested crop details</p>
+
+    <form method="POST" action="{{ url_for('add_harvest') }}">
+
+        <label>Cultivation ID</label>
+        <select name="cultivation_id" required>
+            <option value="">Select Cultivation</option>
+            {% for item in cultivations %}
+            <option value="{{ item[0] }}">
+                Cultivation #{{ item[0] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Harvest Date</label>
+        <input type="date" name="harvest_date" required>
+
+        <label>Quantity Harvested (kg)</label>
+        <input type="number" name="quantity_harvested"
+               step="0.01" min="0.01" required>
+
+        <label>Quality Category</label>
+        <select name="quality_category" required>
+            <option value="">Select Quality</option>
+            <option value="Premium">Premium</option>
+            <option value="Grade A">Grade A</option>
+            <option value="Grade B">Grade B</option>
+            <option value="Standard">Standard</option>
+        </select>
+
+        <label>Selling Price per kg (₹)</label>
+        <input type="number" name="selling_price"
+               step="0.01" min="0" required>
+
+        <button type="submit">Save Harvest</button>
+        <a href="{{ url_for('harvest') }}">Cancel</a>
+
+    </form>
+</div>
+
+</body>
+</html>

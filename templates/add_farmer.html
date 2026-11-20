@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Registration</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            background: #f0f5e9;
+            color: #263b2b;
+        }
+
+        .farmer-container {
+            max-width: 950px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #245c32;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #245c32;
+            border-bottom: 2px solid #dcebd9;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid #ccd8cc;
+            border-radius: 7px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #34834a;
+            box-shadow: 0 0 4px #a4d5ad;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button, .back-btn {
+            padding: 13px 28px;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .register-btn {
+            background: #28743b;
+            color: white;
+        }
+
+        .register-btn:hover {
+            background: #1d572d;
+        }
+
+        .back-btn {
+            background: #e4e9e3;
+            color: #333;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .success {
+            background: #d9f2df;
+            color: #216333;
+        }
+
+        .error {
+            background: #ffe0e0;
+            color: #a32626;
+        }
+
+        @media(max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .farmer-container {
+                padding: 20px;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="farmer-container">
+
+    <h1>Farmer Registration</h1>
+    <p class="subtitle">Register a new farmer in the Agriculture Management System</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form id="farmerForm" method="POST">
+
+        <input type="hidden" name="address" id="address">
+
+        <h3 class="section-title">1. Personal Details</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Farmer Name *</label>
+                <input type="text" name="name" required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>Gender *</label>
+                <select name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age" min="18" max="120">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email">
+            </div>
+
+        </div>
+
+        <h3 class="section-title">2. Contact Details</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Primary Contact *</label>
+                <input type="tel" name="contact"
+                       pattern="[0-9]{10}" maxlength="10"
+                       placeholder="10 digit mobile number" required>
+            </div>
+
+            <div class="form-group">
+                <label>Alternate Contact</label>
+                <input type="tel" name="alternate_contact"
+                       pattern="[0-9]{10}" maxlength="10">
+            </div>
+
+        </div>
+
+        <h3 class="section-title">3. Address Details</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Door Number</label>
+                <input type="text" name="door_no">
+            </div>
+
+            <div class="form-group">
+                <label>Street</label>
+                <input type="text" name="street">
+            </div>
+
+            <div class="form-group">
+                <label>Village</label>
+                <input type="text" name="village">
+            </div>
+
+            <div class="form-group">
+                <label>Taluk</label>
+                <input type="text" name="taluk">
+            </div>
+
+            <div class="form-group">
+                <label>District</label>
+                <input type="text" name="district">
+            </div>
+
+            <div class="form-group">
+                <label>State</label>
+                <input type="text" name="state" value="Tamil Nadu">
+            </div>
+
+            <div class="form-group">
+                <label>Pincode</label>
+                <input type="text" name="pincode"
+                       pattern="[0-9]{6}" maxlength="6">
+            </div>
+
+        </div>
+
+        <h3 class="section-title">4. Farming Information</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Farmer Type</label>
+                <select name="farmer_type">
+                    <option value="">Select Type</option>
+                    <option>Owner</option>
+                    <option>Tenant</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Total Land Area (Acres)</label>
+                <input type="number" name="total_land_area"
+                       min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>Farming Experience (Years)</label>
+                <input type="number" name="farming_experience"
+                       min="0" max="100">
+            </div>
+
+            <div class="form-group">
+                <label>Main Crop</label>
+                <input type="text" name="main_crop">
+            </div>
+
+            <div class="form-group full-width">
+                <label>Irrigation Facility</label>
+                <select name="irrigation_facility">
+                    <option value="">Select Facility</option>
+                    <option>Drip Irrigation</option>
+                    <option>Sprinkler Irrigation</option>
+                    <option>Canal</option>
+                    <option>Borewell</option>
+                    <option>Rainfed</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+            <a href="{{ url_for('farmers') }}" class="back-btn">Back</a>
+            <button type="submit" class="register-btn">
+                Register Farmer
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+    document.getElementById("farmerForm").addEventListener("submit", function() {
+        const fields = [
+            "door_no", "street", "village", "taluk",
+            "district", "state", "pincode"
+        ];
+
+        const address = fields
+            .map(name => this.elements[name].value.trim())
+            .filter(value => value !== "")
+            .join(", ");
+
+        document.getElementById("address").value = address;
+    });
+</script>
+
+</body>
+</html>

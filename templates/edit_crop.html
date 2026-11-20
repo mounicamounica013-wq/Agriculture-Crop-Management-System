@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Crop | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .crop-form-container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .crop-form-container h2 {
+            color: #245c32;
+            margin-bottom: 25px;
+        }
+
+        .crop-form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .crop-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .crop-form-group input,
+        .crop-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+
+        .crop-submit-btn {
+            background: #245c32;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .crop-cancel-btn {
+            margin-left: 12px;
+            color: #245c32;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="crop-form-container">
+
+    <h2>✏️ Edit Crop Details</h2>
+
+    <form method="POST"
+          action="{{ url_for('edit_crop', crop_id=crop[0]) }}">
+
+        <div class="crop-form-group">
+            <label>Select Farm</label>
+
+            <select name="farm_id">
+                <option value="">-- No Farm Selected --</option>
+
+                {% for farm in farms %}
+                <option value="{{ farm[0] }}"
+                    {% if farm[0] == crop[1] %}selected{% endif %}>
+                    Farm #{{ farm[0] }} - {{ farm[1] or 'Location not specified' }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Crop Name *</label>
+            <input type="text" name="crop_name"
+                   value="{{ crop[2] or '' }}"
+                   maxlength="100" required>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Season *</label>
+            <select name="season" required>
+                {% for season in ['Winter', 'Summer', 'Monsoon', 'Autumn', 'Year Round'] %}
+                <option value="{{ season }}"
+                    {% if crop[3] == season %}selected{% endif %}>
+                    {{ season }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Crop Category</label>
+            <select name="crop_category">
+                <option value="">-- Select Category --</option>
+
+                {% for category in ['Food Crop', 'Cash Crop', 'Cereal', 'Pulse', 'Vegetable', 'Fruit', 'Oilseed', 'Other'] %}
+                <option value="{{ category }}"
+                    {% if crop[4] == category %}selected{% endif %}>
+                    {{ category }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Expected Duration (Days)</label>
+            <input type="number" name="expected_duration_days"
+                   value="{{ crop[5] if crop[5] else '' }}"
+                   min="1">
+        </div>
+
+        <button type="submit" class="crop-submit-btn">
+            Update Crop
+        </button>
+
+        <a href="{{ url_for('crops') }}" class="crop-cancel-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

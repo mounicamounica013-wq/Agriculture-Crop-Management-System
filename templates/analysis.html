@@ -1,31 +1,342 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Yield and Profit Analysis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yield & Profit Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-    <h1>📊 Yield and Profit Analysis</h1>
-    <p>Crop-wise Production and Profit Report</p>
+<div class="analysis-page">
 
-    <div class="container">
-        {% for item in analysis %}
-        <div class="card">
-            <h2>{{ item[0] }}</h2>
-            <p>Cultivated Area: {{ item[1] }} Acres</p>
-            <p>Harvested Quantity: {{ item[2] }} kg</p>
-            <p>Yield: {{ (item[2] / item[1]) | round(2) }} kg/acre</p>
-            <p>Selling Price: ₹{{ item[3] }}/kg</p>
-            <p>Revenue: ₹{{ (item[2] * item[3]) | round(2) }}</p>
-            <p>Input Cost: ₹{{ item[4] }}</p>
-            <p>Estimated Profit: ₹{{ (item[2] * item[3] - item[4]) | round(2) }}</p>
+    <header class="analysis-header">
+        <div>
+            <span class="analysis-label">ANALYTICS & REPORTS</span>
+            <h1>📊 Yield and Profit Analysis</h1>
+            <p>Crop-wise production, revenue and cost report</p>
         </div>
-        {% endfor %}
+        <a href="/" class="analysis-back">← Dashboard</a>
+    </header>
+
+    {% set ns = namespace(production=0, revenue=0, cost=0, profit=0) %}
+
+    {% for item in analysis %}
+        {% set ns.production = ns.production + item[2] %}
+        {% set ns.revenue = ns.revenue + (item[2] * item[3]) %}
+        {% set ns.cost = ns.cost + item[4] %}
+        {% set ns.profit = ns.profit + (item[2] * item[3] - item[4]) %}
+    {% endfor %}
+
+    <section class="analysis-summary">
+
+        <div class="analysis-stat">
+            <div class="analysis-stat-icon">🌾</div>
+            <div>
+                <p>Total Production</p>
+                <h2>{{ ns.production }} kg</h2>
+            </div>
+        </div>
+
+        <div class="analysis-stat">
+            <div class="analysis-stat-icon">💰</div>
+            <div>
+                <p>Total Revenue</p>
+                <h2>₹{{ "%.2f"|format(ns.revenue) }}</h2>
+            </div>
+        </div>
+
+        <div class="analysis-stat">
+            <div class="analysis-stat-icon">🧪</div>
+            <div>
+                <p>Total Input Cost</p>
+                <h2>₹{{ "%.2f"|format(ns.cost) }}</h2>
+            </div>
+        </div>
+
+        <div class="analysis-stat">
+            <div class="analysis-stat-icon">📈</div>
+            <div>
+                <p>Estimated Profit</p>
+                <h2>₹{{ "%.2f"|format(ns.profit) }}</h2>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="analysis-section-heading">
+        <h2>Crop-wise Performance</h2>
+        <p>Detailed yield and financial information for each crop</p>
     </div>
 
-    <br><br>
-    <a href="/">Back to Dashboard</a>
+    <section class="analysis-grid">
 
+        {% for item in analysis %}
+
+        <div class="analysis-card">
+
+            <div class="analysis-card-header">
+                <div class="analysis-crop-icon">🌱</div>
+                <div>
+                    <span class="analysis-crop-label">CROP REPORT</span>
+                    <h3>{{ item[0] }}</h3>
+                </div>
+            </div>
+
+            <div class="analysis-yield-box">
+                <span>Yield per Acre</span>
+                <strong>
+                    {% if item[1] != 0 %}
+                        {{ "%.2f"|format(item[2] / item[1]) }} kg
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </strong>
+            </div>
+
+            <div class="analysis-details">
+
+                <div class="analysis-detail">
+                    <span>📏</span>
+                    <div>
+                        <small>Cultivated Area</small>
+                        <strong>{{ item[1] }} Acres</strong>
+                    </div>
+                </div>
+
+                <div class="analysis-detail">
+                    <span>📦</span>
+                    <div>
+                        <small>Harvested Quantity</small>
+                        <strong>{{ item[2] }} kg</strong>
+                    </div>
+                </div>
+
+                <div class="analysis-detail">
+                    <span>🏷️</span>
+                    <div>
+                        <small>Selling Price</small>
+                        <strong>₹{{ item[3] }}/kg</strong>
+                    </div>
+                </div>
+
+                <div class="analysis-detail">
+                    <span>💵</span>
+                    <div>
+                        <small>Revenue</small>
+                        <strong>₹{{ "%.2f"|format(item[2] * item[3]) }}</strong>
+                    </div>
+                </div>
+
+                <div class="analysis-detail">
+                    <span>🧪</span>
+                    <div>
+                        <small>Input Cost</small>
+                        <strong>₹{{ "%.2f"|format(item[4]) }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="analysis-profit">
+                <span>Estimated Profit</span>
+                <strong>₹{{ "%.2f"|format(item[2] * item[3] - item[4]) }}</strong>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="analysis-empty">
+            <div>📊</div>
+            <h3>No Analysis Data Available</h3>
+            <p>Add cultivation, harvest and agricultural input records to view your analysis.</p>
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+    <footer class="analysis-footer">
+        Agriculture Crop Management System · Yield Analysis Report
+    </footer>
+
+</div>
+<!-- Crop Production Chart -->
+<div class="chart-container">
+    <h2>Crop-wise Production</h2>
+    <canvas id="productionChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const cropLabels = [
+        {% for item in crop_production %}
+            {{ item[0] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const productionValues = [
+        {% for item in crop_production %}
+            {{ item[1] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const ctx = document.getElementById('productionChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: cropLabels,
+            datasets: [{
+                label: 'Production (kg)',
+                data: productionValues,
+                backgroundColor: 'rgba(46, 125, 50, 0.7)',
+                borderColor: '#2e7d32',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Quantity (kg)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Crop Name'
+                    }
+                }
+            }
+        }
+    });
+</script>
+<!-- Yield Per Acre Chart -->
+<div class="chart-container">
+    <h2>Yield per Acre Comparison</h2>
+    <canvas id="yieldChart"></canvas>
+</div>
+
+<script>
+    const yieldLabels = [
+        {% for item in yield_data %}
+            {{ item[0] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const yieldValues = [
+        {% for item in yield_data %}
+            {{ item[1] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    new Chart(document.getElementById('yieldChart'), {
+        type: 'bar',
+        data: {
+            labels: yieldLabels,
+            datasets: [{
+                label: 'Yield (kg per acre)',
+                data: yieldValues,
+                backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                borderColor: '#388e3c',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Yield (kg/acre)'
+                    }
+                }
+            }
+        }
+    });
+</script>
+<!-- Revenue vs Input Cost Chart -->
+<div class="chart-container">
+    <h2>Revenue vs Input Cost</h2>
+    <canvas id="revenueCostChart"></canvas>
+</div>
+
+<script>
+    const financialLabels = [
+        {% for item in revenue_cost_data %}
+            {{ item[0] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const revenueValues = [
+        {% for item in revenue_cost_data %}
+            {{ item[1] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const costValues = [
+        {% for item in revenue_cost_data %}
+            {{ item[2] | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    new Chart(document.getElementById('revenueCostChart'), {
+        type: 'bar',
+        data: {
+            labels: financialLabels,
+            datasets: [
+                {
+                    label: 'Revenue (₹)',
+                    data: revenueValues,
+                    backgroundColor: 'rgba(76, 175, 80, 0.75)',
+                    borderColor: '#2e7d32',
+                    borderWidth: 1,
+                    borderRadius: 5
+                },
+                {
+                    label: 'Input Cost (₹)',
+                    data: costValues,
+                    backgroundColor: 'rgba(255, 152, 0, 0.75)',
+                    borderColor: '#ef6c00',
+                    borderWidth: 1,
+                    borderRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (₹)'
+                    }
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>

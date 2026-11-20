@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Crop | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .crop-form-container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .crop-form-container h2 {
+            color: #245c32;
+            margin-bottom: 25px;
+        }
+
+        .crop-form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .crop-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .crop-form-group input,
+        .crop-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+
+        .crop-submit-btn {
+            background: #245c32;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .crop-cancel-btn {
+            margin-left: 12px;
+            color: #245c32;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="crop-form-container">
+
+    <h2>🌱 Register New Crop</h2>
+
+    <form method="POST" action="{{ url_for('add_crop') }}">
+
+        <div class="crop-form-group">
+            <label>Select Farm</label>
+
+            <select name="farm_id">
+                <option value="">-- No Farm Selected --</option>
+
+                {% for farm in farms %}
+                <option value="{{ farm[0] }}">
+                    Farm #{{ farm[0] }} - {{ farm[1] or 'Location not specified' }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Crop Name *</label>
+            <input type="text" name="crop_name"
+                   placeholder="Example: Paddy, Sugarcane, Cotton"
+                   maxlength="100" required>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Season *</label>
+            <select name="season" required>
+                <option value="">-- Select Season --</option>
+                <option value="Winter">Winter</option>
+                <option value="Summer">Summer</option>
+                <option value="Monsoon">Monsoon</option>
+                <option value="Autumn">Autumn</option>
+                <option value="Year Round">Year Round</option>
+            </select>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Crop Category</label>
+            <select name="crop_category">
+                <option value="">-- Select Category --</option>
+                <option value="Food Crop">Food Crop</option>
+                <option value="Cash Crop">Cash Crop</option>
+                <option value="Cereal">Cereal</option>
+                <option value="Pulse">Pulse</option>
+                <option value="Vegetable">Vegetable</option>
+                <option value="Fruit">Fruit</option>
+                <option value="Oilseed">Oilseed</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="crop-form-group">
+            <label>Expected Duration (Days)</label>
+            <input type="number" name="expected_duration_days"
+                   min="1" placeholder="Example: 120">
+        </div>
+
+        <button type="submit" class="crop-submit-btn">
+            Save Crop
+        </button>
+
+        <a href="{{ url_for('crops') }}" class="crop-cancel-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

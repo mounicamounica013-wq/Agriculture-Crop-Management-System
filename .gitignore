@@ -1,5 +1,28 @@
+
+# Python cache
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+
+# Virtual environment
 venv/
+env/
 .venv/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and local files
+*.log
+*.db
+instance/
+
+# Editor settings
+.vscode/
+
+# Uploaded private data
+uploads/
+# Java compiled files
+*.class
+target/

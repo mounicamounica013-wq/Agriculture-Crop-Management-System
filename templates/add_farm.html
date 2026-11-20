@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Farm | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .farm-form-container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .farm-form-container h2 {
+            color: #245c32;
+            margin-bottom: 25px;
+        }
+        .farm-form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .farm-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .farm-form-group input,
+        .farm-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        .farm-submit-btn {
+            background: #245c32;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .farm-cancel-btn {
+            display: inline-block;
+            margin-left: 12px;
+            color: #245c32;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="farm-form-container">
+
+    <h2>🌱 Register New Farm</h2>
+
+    <form method="POST" action="{{ url_for('add_farm') }}">
+
+        <div class="farm-form-group">
+            <label>Select Farmer *</label>
+            <select name="farmer_id" required>
+                <option value="">-- Select Farmer --</option>
+                {% for farmer in farmers %}
+                <option value="{{ farmer[0] }}">
+                    {{ farmer[1] }} (ID: {{ farmer[0] }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="farm-form-group">
+            <label>Farm Location *</label>
+            <input type="text" name="location"
+                   placeholder="Enter farm location" required>
+        </div>
+
+        <div class="farm-form-group">
+            <label>Total Area (Acres) *</label>
+            <input type="number" name="total_area"
+                   step="0.01" min="0.01"
+                   placeholder="Enter total area" required>
+        </div>
+
+        <button type="submit" class="farm-submit-btn">
+            Save Farm
+        </button>
+
+        <a href="{{ url_for('farms') }}" class="farm-cancel-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

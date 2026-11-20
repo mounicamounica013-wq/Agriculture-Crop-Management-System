@@ -1,0 +1,5 @@
+crop_name,cultivated_area,quantity_harvested,selling_price,quality_category,yield_per_acre,total_revenue
+Paddy,3.0,3000.0,25.0,A Grade,1000.0,75000.0
+Sugarcane,2.0,2500.0,30.0,A Grade,1250.0,75000.0
+Cotton,4.0,2000.0,28.0,B Grade,500.0,56000.0
+groundnut,2.0,1800.0,32.0,A grade,900.0,57600.0

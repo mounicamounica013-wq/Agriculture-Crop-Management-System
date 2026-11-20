@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Agriculture Input | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .input-form-container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .input-form-container h2 {
+            color: #245c32;
+            margin-bottom: 25px;
+        }
+
+        .input-form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-form-group input,
+        .input-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+
+        .input-submit-btn {
+            background: #245c32;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .input-cancel-btn {
+            margin-left: 12px;
+            color: #245c32;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="input-form-container">
+
+    <h2>🌾 Register New Agriculture Input</h2>
+
+    <form method="POST" action="{{ url_for('add_input') }}">
+
+        <div class="input-form-group">
+            <label>Select Cultivation</label>
+
+            <select name="cultivation_id">
+                <option value="">-- No Cultivation Selected --</option>
+
+                {% for cultivation in cultivations %}
+                <option value="{{ cultivation[0] }}">
+                    ID: {{ cultivation[0] }} |
+                    {{ cultivation[1] or 'Crop not specified' }} |
+                    {{ cultivation[2] or 'Location not specified' }} |
+                    {{ cultivation[3] or '' }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="input-form-group">
+            <label>Fertilizer Type *</label>
+            <input type="text" name="fertilizer_type"
+                   maxlength="100"
+                   placeholder="Enter fertilizer type"
+                   required>
+        </div>
+
+        <div class="input-form-group">
+            <label>Quantity Used *</label>
+            <input type="number" name="quantity_used"
+                   step="0.01" min="0.01"
+                   placeholder="Enter quantity"
+                   required>
+        </div>
+
+        <div class="input-form-group">
+            <label>Input Cost (₹) *</label>
+            <input type="number" name="input_cost"
+                   step="0.01" min="0"
+                   placeholder="Enter input cost"
+                   required>
+        </div>
+
+        <div class="input-form-group">
+            <label>Application Date *</label>
+            <input type="date" name="application_date" required>
+        </div>
+
+        <button type="submit" class="input-submit-btn">
+            Save Input
+        </button>
+
+        <a href="{{ url_for('inputs') }}" class="input-cancel-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

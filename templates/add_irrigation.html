@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Irrigation | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f5e9;
+            padding: 30px;
+        }
+
+        .form-container {
+            max-width: 550px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #245c32;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+
+        button, .cancel {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 7px;
+            background: #216b39;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .cancel {
+            background: #777;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <h2>💧 Add New Irrigation</h2>
+
+    <form method="POST" action="{{ url_for('add_irrigation') }}">
+
+        <div class="form-group">
+            <label>Select Cultivation *</label>
+
+            <select name="cultivation_id" required>
+                <option value="">-- Select Cultivation --</option>
+
+                {% for item in cultivations %}
+                <option value="{{ item[0] }}">
+                    ID: {{ item[0] }} |
+                    {{ item[1] or 'Crop not specified' }} |
+                    {{ item[2] or 'Location not specified' }} |
+                    {{ item[3] or '' }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Irrigation Date *</label>
+            <input type="date" name="irrigation_date" required>
+        </div>
+
+        <div class="form-group">
+            <label>Water Quantity (Units) *</label>
+            <input type="number" name="water_quantity"
+                   step="0.01" min="0.01"
+                   placeholder="Enter water quantity" required>
+        </div>
+
+        <div class="form-group">
+            <label>Irrigation Method *</label>
+            <select name="irrigation_method" required>
+                <option value="">-- Select Method --</option>
+                <option value="Drip Irrigation">Drip Irrigation</option>
+                <option value="Sprinkler">Sprinkler</option>
+                <option value="Canal Irrigation">Canal Irrigation</option>
+                <option value="Flood Irrigation">Flood Irrigation</option>
+                <option value="Manual Irrigation">Manual Irrigation</option>
+            </select>
+        </div>
+
+        <button type="submit">Save Irrigation</button>
+
+        <a href="{{ url_for('irrigation') }}" class="cancel">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

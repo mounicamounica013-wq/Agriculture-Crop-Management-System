@@ -1,56 +1,215 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Agriculture Management System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agriculture Management Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-    <h1>🌾 Agriculture Crop Management System</h1>
-    <p>Crop Management and Yield Analysis Dashboard</p>
+    <div class="dashboard">
 
-    <div class="container">
+        <aside class="sidebar">
+            <h2>🌾 AgriManage</h2>
+            <p class="sidebar-subtitle">Management System</p>
 
-        <div class="card">
-            <h2>Total Farmers</h2>
-            <h1>{{ farmers }}</h1>
-        </div>
+            <nav>
+                <a href="/" class="active">🏠 Dashboard</a>
+                <a href="/farmers">👨‍🌾 Farmers</a>
+                <a href="/farms">🏡 Farms</a>
+                <a href="/crops">🌱 Crops</a>
+                <a href="/inputs">🧪 Agricultural Inputs</a>
+                <a href="/irrigation">💧 Irrigation</a>
+                <a href="/harvest">🌾 Harvest</a>
+                <a href="/analysis">📊 Yield Analysis</a>
+            </nav>
+        </aside>
 
-        <div class="card">
-            <h2>Total Farms</h2>
-            <h1>{{ farms }}</h1>
-        </div>
+        <main class="main-content">
 
-        <div class="card">
-            <h2>Total Crops</h2>
-            <h1>{{ crops }}</h1>
-        </div>
+            <header class="dashboard-header">
+                <div>
+                    <h1>Agriculture Dashboard</h1>
+                    <p>Crop Management and Yield Analysis System</p>
+                </div>
+                <div class="admin-label">Admin Panel</div>
+            </header>
 
-        <div class="card">
-            <h2>Total Production</h2>
-            <h1>{{ production }} kg</h1>
-        </div>
+            <section class="welcome-section">
+                <h2>Welcome to Agriculture Management</h2>
+                <p>Monitor farmers, farms, crops and agricultural production in one place.</p>
+            </section>
 
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon">👨‍🌾</div>
+                    <h3>Total Farmers</h3>
+                    <h2>{{ farmers }}</h2>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🏡</div>
+                    <h3>Total Farms</h3>
+                    <h2>{{ farms }}</h2>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🌱</div>
+                    <h3>Total Crops</h3>
+                    <h2>{{ crops }}</h2>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🌾</div>
+                    <h3>Total Production</h3>
+                    <h2>{{ production }} <small>kg</small></h2>
+                </div>
+
+            </section>
+
+            <section class="modules-section">
+                <h2>Management Modules</h2>
+                <p>Choose a module to manage agricultural records.</p>
+
+                <div class="modules-grid">
+
+                    <a href="/farmers" class="module-card">
+                        <span>👨‍🌾</span>
+                        <h3>Farmer Management</h3>
+                        <p>Manage farmer details and contact information.</p>
+                    </a>
+
+                    <a href="/farms" class="module-card">
+                        <span>🏡</span>
+                        <h3>Farm Management</h3>
+                        <p>Manage farm locations and cultivated areas.</p>
+                    </a>
+
+                    <a href="/crops" class="module-card">
+                        <span>🌱</span>
+                        <h3>Crop Management</h3>
+                        <p>View and manage crop information.</p>
+                    </a>
+
+                    <a href="/inputs" class="module-card">
+                        <span>🧪</span>
+                        <h3>Agricultural Inputs</h3>
+                        <p>Manage fertilizer details and input costs.</p>
+                    </a>
+
+                    <a href="/irrigation" class="module-card">
+                        <span>💧</span>
+                        <h3>Irrigation Management</h3>
+                        <p>Track irrigation dates and water usage.</p>
+                    </a>
+
+                    <a href="/harvest" class="module-card">
+                        <span>🌾</span>
+                        <h3>Harvest Management</h3>
+                        <p>View harvest quantity and selling price.</p>
+                    </a>
+
+                    <a href="/analysis" class="module-card">
+                        <span>📊</span>
+                        <h3>Yield Analysis</h3>
+                        <p>Explore crop productivity and revenue analysis.</p>
+                    </a>
+
+                </div>
+            </section>
+
+            <footer>
+                Agriculture Crop Management and Yield Analysis System
+            </footer>
+
+        </main>
     </div>
 
-    <br><br>
-    <a href="/crops">View Crop Details</a>
+<section class="recent-farmers">
+    <h2>Recently Registered Farmers</h2>
+    <p>Latest 5 farmer registrations</p>
 
-    <br><br>
-    <a href="/farms">View Farm Details</a>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Farmer ID</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Village</th>
+                    <th>District</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
 
-    <br><br>
-    <a href="/farmers">View Farmer Details</a>
+            <tbody>
+                {% for farmer in recent_farmers %}
+                <tr>
+                    <td>{{ farmer[0] }}</td>
+                    <td>{{ farmer[1] }}</td>
+                    <td>{{ farmer[2] }}</td>
+                    <td>{{ farmer[3] or '-' }}</td>
+                    <td>{{ farmer[4] or '-' }}</td>
+                    <td>{{ farmer[5] or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No farmers registered yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
-    <br><br>
-    <a href="/inputs">View Agricultural Input Details</a>
+<style>
+.recent-farmers {
+    background: white;
+    padding: 25px;
+    margin: 30px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
 
-    <br><br>
-    <a href="/irrigation">View Irrigation Details</a>
+.recent-farmers h2 {
+    color: #245c32;
+    margin-bottom: 5px;
+}
 
-    <br><br>
-    <a href="/harvest">View Harvest Details</a>
+.recent-farmers p {
+    color: #777;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.recent-farmers table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.recent-farmers th {
+    background: #28743b;
+    color: white;
+    padding: 13px;
+    text-align: left;
+}
+
+.recent-farmers td {
+    padding: 13px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.recent-farmers tr:hover {
+    background: #f0f7ef;
+}
+</style>
 
 </body>
 </html>
+

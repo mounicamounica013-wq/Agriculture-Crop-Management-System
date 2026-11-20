@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Harvest | AgriManage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="form-container">
+    <h1>🌾 Edit Harvest Record</h1>
+    <p>Update harvested crop details</p>
+
+    <form method="POST">
+
+        <label>Cultivation ID</label>
+        <select name="cultivation_id" required>
+            {% for item in cultivations %}
+            <option value="{{ item[0] }}"
+                {% if item[0] == harvest[1] %}selected{% endif %}>
+                Cultivation #{{ item[0] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Harvest Date</label>
+        <input type="date" name="harvest_date"
+               value="{{ harvest[2] }}" required>
+
+        <label>Quantity Harvested (kg)</label>
+        <input type="number" name="quantity_harvested"
+               value="{{ harvest[3] }}" step="0.01" min="0.01" required>
+
+        <label>Quality Category</label>
+        <select name="quality_category" required>
+            {% for quality in ['Premium', 'Grade A', 'Grade B', 'Standard'] %}
+            <option value="{{ quality }}"
+                {% if quality == harvest[4] %}selected{% endif %}>
+                {{ quality }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Selling Price per kg (₹)</label>
+        <input type="number" name="selling_price"
+               value="{{ harvest[5] }}" step="0.01" min="0" required>
+
+        <button type="submit">Update Harvest</button>
+        <a href="{{ url_for('harvest') }}">Cancel</a>
+
+    </form>
+</div>
+
+</body>
+</html>

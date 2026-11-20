@@ -1,30 +1,254 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Agricultural Input Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agriculture Inputs | AgriManage</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .input-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        .input-summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        }
+
+        .input-summary-card p {
+            color: #666;
+        }
+
+        .input-summary-card h2 {
+            color: #245c32;
+        }
+
+        .input-add-btn {
+            display: inline-block;
+            background: #245c32;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            margin: 15px 0;
+        }
+
+        .input-search {
+            display: flex;
+            gap: 10px;
+            margin: 18px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-search input {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .input-search button {
+            background: #245c32;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 18px;
+            cursor: pointer;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .input-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        }
+
+        .input-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-card h3 {
+            color: #245c32;
+        }
+
+        .input-info {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .input-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .input-edit-btn,
+        .input-delete-btn {
+            padding: 9px 13px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .input-edit-btn {
+            background: #245c32;
+            color: white;
+        }
+
+        .input-delete-btn {
+            background: #c0392b;
+            color: white;
+        }
+
+        .input-flash {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 7px;
+            background: #e8f5e9;
+            color: #245c32;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>🌱 Agricultural Input Details</h1>
-    <p>Fertilizer Usage and Cost Information</p>
+<div class="input-page">
 
-    <div class="container">
-
-        {% for item in inputs %}
-        <div class="card">
-            <h2>{{ item[1] }}</h2>
-            <p>Input ID: {{ item[0] }}</p>
-            <p>Quantity Used: {{ item[2] }}</p>
-            <p>Input Cost: ₹{{ item[3] }}</p>
-            <p>Application Date: {{ item[4] }}</p>
+    <header class="farm-header">
+        <div>
+            <span class="page-label">MANAGEMENT MODULE</span>
+            <h1>🌾 Agriculture Inputs</h1>
+            <p>Manage fertilizers, quantities and application costs.</p>
         </div>
+
+        <a href="/" class="farm-back-btn">← Dashboard</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="input-flash">{{ message }}</div>
         {% endfor %}
+    {% endwith %}
 
-    </div>
+    <section class="input-summary-grid">
 
-    <br><br>
-    <a href="/">Back to Dashboard</a>
+        <div class="input-summary-card">
+            <p>📦 Total Input Records</p>
+            <h2>{{ summary[0] }}</h2>
+        </div>
+
+        <div class="input-summary-card">
+            <p>⚖️ Total Quantity Used</p>
+            <h2>{{ summary[1] }}</h2>
+        </div>
+
+        <div class="input-summary-card">
+            <p>💰 Total Input Cost</p>
+            <h2>₹ {{ summary[2] }}</h2>
+        </div>
+
+        <div class="input-summary-card">
+            <p>🌱 Fertilizer Types</p>
+            <h2>{{ summary[3] }}</h2>
+        </div>
+
+    </section>
+
+    <section>
+
+        <h2>Registered Agriculture Inputs</h2>
+        <p>Input details retrieved from the database</p>
+
+        <a href="{{ url_for('add_input') }}" class="input-add-btn">
+            ➕ Add New Input
+        </a>
+
+        <form method="GET" action="{{ url_for('inputs') }}" class="input-search">
+
+            <input type="text" name="search"
+                   value="{{ search }}"
+                   placeholder="Search fertilizer or crop name">
+
+            <button type="submit">🔍 Search</button>
+
+            <a href="{{ url_for('inputs') }}">Clear</a>
+
+        </form>
+
+        <div class="input-grid">
+
+            {% for item in inputs %}
+
+            <div class="input-card">
+
+                <div class="input-card-top">
+                    <span>🌿 Agriculture Input</span>
+                    <strong>#{{ item[0] }}</strong>
+                </div>
+
+                <h3>{{ item[2] or 'Input not specified' }}</h3>
+
+                <div class="input-info">
+                    <p><strong>Cultivation ID:</strong> {{ item[1] or 'Not assigned' }}</p>
+                    <p><strong>Crop:</strong> {{ item[7] or 'Not specified' }}</p>
+                    <p><strong>Season:</strong> {{ item[6] or 'Not specified' }}</p>
+                    <p><strong>Quantity:</strong> {{ item[3] or 0 }}</p>
+                    <p><strong>Input Cost:</strong> ₹ {{ item[4] or 0 }}</p>
+                    <p><strong>Application Date:</strong> {{ item[5] or '-' }}</p>
+                </div>
+
+                <div class="input-actions">
+
+                    <a href="{{ url_for('edit_input', input_id=item[0]) }}"
+                       class="input-edit-btn">
+                        ✏️ Edit Input
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('delete_input', input_id=item[0]) }}"
+                          onsubmit="return confirm('Are you sure you want to delete this input?');">
+
+                        <button type="submit" class="input-delete-btn">
+                            🗑️ Delete Input
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <p>No agriculture input records available.</p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
 
 </body>
 </html>

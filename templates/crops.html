@@ -1,41 +1,246 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Crop Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Management | AgriManage</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .crop-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .crop-actions a,
+        .crop-actions button,
+        .crop-add-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .crop-edit-btn, .crop-add-btn {
+            background: #245c32;
+            color: white;
+        }
+
+        .crop-delete-btn {
+            background: #c0392b;
+            color: white;
+        }
+
+        .crop-search {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .crop-search input {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .crop-search button {
+            padding: 10px 18px;
+            background: #245c32;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .crop-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        .crop-summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        }
+
+        .crop-summary-card p {
+            color: #666;
+        }
+
+        .crop-summary-card h2 {
+            color: #245c32;
+        }
+
+        .crop-flash {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 7px;
+            background: #e8f5e9;
+            color: #245c32;
+        }
+
+        .crop-card form {
+            margin: 0;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>🌾 Crop Details</h1>
-    <p>Available Crops in Agriculture Management System</p>
+<div class="crop-page">
 
-    <div class="container">
+    <header class="crop-header">
+        <div>
+            <span class="page-label">MANAGEMENT MODULE</span>
+            <h1>🌱 Crop Management</h1>
+            <p>Manage crop varieties, seasons and cultivation details.</p>
+        </div>
+        <a href="/" class="crop-back">← Dashboard</a>
+    </header>
 
-        <div class="card">
-            <h2>🌾 Paddy</h2>
-            <p>Crop Type: Food Crop</p>
-            <p>Area: 3 Acres</p>
-            <p>Harvest: 3000 kg</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="crop-flash">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="crop-summary-grid">
+
+        <div class="crop-summary-card">
+            <p>🌱 Total Registered Crops</p>
+            <h2>{{ crops|length }}</h2>
         </div>
 
-        <div class="card">
-            <h2>🎋 Sugarcane</h2>
-            <p>Crop Type: Cash Crop</p>
-            <p>Area: 2 Acres</p>
-            <p>Harvest: 2500 kg</p>
+        <div class="crop-summary-card">
+            <p>🌾 Crop Categories</p>
+            <h2>{{ category_count }}</h2>
         </div>
 
-        <div class="card">
-            <h2>🌱 Cotton</h2>
-            <p>Crop Type: Cash Crop</p>
-            <p>Area: 4 Acres</p>
-            <p>Harvest: 2000 kg</p>
+        <div class="crop-summary-card">
+            <p>🌦️ Available Seasons</p>
+            <h2>{{ season_count }}</h2>
         </div>
 
-    </div>
+    </section>
 
-    <br>
-    <a href="/">Back to Dashboard</a>
+    <section class="crop-list-section">
+
+        <h2>Registered Crops</h2>
+        <p>Crop information available in the database</p>
+
+        <a href="{{ url_for('add_crop') }}" class="crop-add-btn">
+            ➕ Add New Crop
+        </a>
+
+        <form method="GET" action="{{ url_for('crops') }}" class="crop-search">
+            <input type="text" name="search"
+                   value="{{ search }}"
+                   placeholder="Search crop name, season or category">
+
+            <button type="submit">🔍 Search</button>
+
+            <a href="{{ url_for('crops') }}">Clear</a>
+        </form>
+
+        <div class="crop-grid">
+
+            {% for crop in crops %}
+
+            <div class="crop-card">
+
+                <div class="crop-card-top">
+                    <span class="crop-icon">🌱</span>
+                    <span class="crop-id">Crop #{{ crop[0] }}</span>
+                </div>
+
+                <h3>{{ crop[2]|title }}</h3>
+
+                <div class="crop-info">
+
+                    <div>
+                        <span>🏡</span>
+                        <div>
+                            <small>Farm ID</small>
+                            <strong>{{ crop[1] if crop[1] else 'Not assigned' }}</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span>🌦️</span>
+                        <div>
+                            <small>Season</small>
+                            <strong>{{ crop[3]|title if crop[3] else 'Not specified' }}</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span>🌾</span>
+                        <div>
+                            <small>Category</small>
+                            <strong>{{ crop[4]|title if crop[4] else 'Not specified' }}</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span>📅</span>
+                        <div>
+                            <small>Duration</small>
+                            <strong>
+                                {{ crop[5] if crop[5] else 'Not specified' }}
+                                {% if crop[5] %} days{% endif %}
+                            </strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="crop-actions">
+
+                    <a href="{{ url_for('edit_crop', crop_id=crop[0]) }}"
+                       class="crop-edit-btn">
+                        ✏️ Edit Crop
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('delete_crop', crop_id=crop[0]) }}"
+                          onsubmit="return confirm('Are you sure you want to delete this crop?');">
+
+                        <button type="submit" class="crop-delete-btn">
+                            🗑️ Delete Crop
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <p>No crop records available.</p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    <footer class="crop-footer">
+        Agriculture Crop Management and Yield Analysis System
+    </footer>
+
+</div>
 
 </body>
 </html>

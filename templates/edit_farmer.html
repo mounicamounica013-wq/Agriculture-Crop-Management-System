@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Farmer | AgriManage</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            background: #f0f5e9;
+            color: #263b2b;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 { text-align: center; color: #245c32; }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: #28743b;
+            border-bottom: 2px solid #dcebd9;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #ccd8cc;
+            border-radius: 7px;
+            width: 100%;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button, .back {
+            padding: 13px 25px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        button {
+            background: #28743b;
+            color: white;
+        }
+
+        .back {
+            background: #e4e9e3;
+            color: #333;
+        }
+
+        @media(max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+            .container { padding: 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>✏️ Edit Farmer Details</h1>
+    <p class="subtitle">Update registered farmer information</p>
+
+    <form method="POST">
+
+        <h3>1. Personal Details</h3>
+
+        <div class="grid">
+            <div class="group">
+                <label>Farmer Name</label>
+                <input type="text" name="name" value="{{ farmer[1] or '' }}" required>
+            </div>
+
+            <div class="group">
+                <label>Gender</label>
+                <select name="gender">
+                    <option value="Male" {% if farmer[4] == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if farmer[4] == 'Female' %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if farmer[4] == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+
+            <div class="group">
+                <label>Age</label>
+                <input type="number" name="age" value="{{ farmer[5] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ farmer[6] or '' }}">
+            </div>
+        </div>
+
+        <h3>2. Contact Details</h3>
+
+        <div class="grid">
+            <div class="group">
+                <label>Contact Number</label>
+                <input type="tel" name="contact" value="{{ farmer[2] or '' }}" required>
+            </div>
+
+            <div class="group">
+                <label>Alternate Contact</label>
+                <input type="tel" name="alternate_contact" value="{{ farmer[8] or '' }}">
+            </div>
+        </div>
+
+        <h3>3. Address Details</h3>
+
+        <div class="grid">
+            <div class="group">
+                <label>Door Number</label>
+                <input type="text" name="door_no" value="{{ farmer[9] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Street</label>
+                <input type="text" name="street" value="{{ farmer[10] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Village</label>
+                <input type="text" name="village" value="{{ farmer[11] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Taluk</label>
+                <input type="text" name="taluk" value="{{ farmer[12] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>District</label>
+                <input type="text" name="district" value="{{ farmer[13] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>State</label>
+                <input type="text" name="state" value="{{ farmer[14] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Pincode</label>
+                <input type="text" name="pincode" value="{{ farmer[15] or '' }}">
+            </div>
+        </div>
+
+        <h3>4. Farming Information</h3>
+
+        <div class="grid">
+            <div class="group">
+                <label>Farmer Type</label>
+                <select name="farmer_type">
+                    <option value="Owner" {% if farmer[16] == 'Owner' %}selected{% endif %}>Owner</option>
+                    <option value="Tenant" {% if farmer[16] == 'Tenant' %}selected{% endif %}>Tenant</option>
+                </select>
+            </div>
+
+            <div class="group">
+                <label>Total Land Area (Acres)</label>
+                <input type="number" step="0.01" name="total_land_area" value="{{ farmer[17] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Farming Experience</label>
+                <input type="number" name="farming_experience" value="{{ farmer[18] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Main Crop</label>
+                <input type="text" name="main_crop" value="{{ farmer[19] or '' }}">
+            </div>
+
+            <div class="group">
+                <label>Irrigation Facility</label>
+                <input type="text" name="irrigation_facility" value="{{ farmer[20] or '' }}">
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="{{ url_for('farmers') }}" class="back">Cancel</a>
+            <button type="submit">Update Farmer</button>
+        </div>
+
+    </form>
+
+</div>
+</body>
+</html>
